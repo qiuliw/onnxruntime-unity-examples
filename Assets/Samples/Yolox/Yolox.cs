@@ -125,8 +125,12 @@ namespace Microsoft.ML.OnnxRuntime.Examples
             proposalsList = new NativeList<Detection>(maxDetections, allocator);
             detectionsList = new NativeList<Detection>(maxDetections, allocator);
 
-            var labels = options.labelFile.text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-            labelNames = Array.AsReadOnly(labels);
+            var labelsRaw = options.labelFile.text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < labelsRaw.Length; i++)
+            {
+                labelsRaw[i] = labelsRaw[i].Trim();
+            }
+            labelNames = Array.AsReadOnly(labelsRaw);
             Assert.AreEqual(NUM_CLASSES, labelNames.Count);
             anchors = Anchor.GenerateAnchors(Width, Height, allocator);
         }
